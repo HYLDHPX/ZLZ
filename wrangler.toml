@@ -3,6 +3,6 @@ main = "src/index.js"
 compatibility_date = "2026-07-01"
 
 [assets]
-directory = "./dist" # ⚠️ 修改成你项目打包输出目录
+directory = "./" # 静态文件就在根目录
 binding = "ASSETS"
 not_found_handling = "single-page-application"
