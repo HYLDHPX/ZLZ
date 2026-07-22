@@ -1,0 +1,27 @@
+name: Deploy Workers Assets
+on:
+  push:
+    branches: [ main ] # 换成你的分支，master/main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install packages
+        run: npm install
+
+      - name: Build Project
+        run: npm run build # 和Pages构建命令一模一样，不要改
+
+      - name: Deploy Worker 
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/HYLDHPX/NHGIMG/%E5%9C%86%E8%A7%922-%E5%9B%BE%E6%A0%871%20.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>资源获取-NH导航</title>
+    <link rel="stylesheet" href="./css/main.css">
+</head>
+<body class="dark-mode">
+    <!-- 背景浮动圆点 -->
+    <div class="bg-dots"></div>
+
+    <div class="nav-container">
+        <!-- 顶部工具栏（含美化返回按钮） -->
+        <div class="top-toolbar">
+            <h1>NH导航</h1>
+            <button class="back-btn" onclick="location.href='index.html'">
+                 <span>←</span> 返回
+            </button>
+            <!-- 明暗切换开关 -->
+            <div id="modeToggle" class="mode-toggle">
+                <div id="toggleCircle" class="mode-toggle-circle">
+                    <span class="icon-sun">☀</span>
+                    <span class="icon-moon">☾</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 天气+时间区域 -->
+        <div class="header-row">
+            <div class="weather-box">
+                <div id="weatherIcon" class="weather-icon"></div>
+                <div class="weather-text">
+                    <div id="cityName" class="city">加载中...</div>
+                    <div id="temperature" class="temp">--℃</div>
+                    <div id="weatherDesc" class="weather-desc">加载天气</div>
+                </div>
+            </div>
+            <div class="time-box">
+                <div id="time" class="time-main">00:00:00</div>
+                <div id="dateInfo" class="date-info">2026年01月01日 星期四</div>
+            </div>
+        </div>
+
+        <!-- 站点运行时长 -->
+        <div class="runtime-box">
+            <span class="runtime-label">站点已稳定运行</span>
+            <span id="runTime" class="runtime-data">计算中...</span>
+        </div>
+
+        <!-- 网站卡片网格 -->
+        <div class="site-grid">
+            <div class="site-card" onclick="window.open('https://pan.quark.cn/s/acdb0e309d97','_blank')">
+                <div class="site-logo cloud">☁</div>
+                <div class="site-text">
+                    <h4>夸克云盘</h4>
+                    <p>无提取码</p>
+                </div>
+            </div>
+            <div class="site-card" onclick="window.open('https://pan.baidu.com/s/1-y5tzloiwc67a5-XUna8Ng?pwd=nhzy','_blank')">
+                <div class="site-logo box">📦</div>
+                <div class="site-text">
+                    <h4>百度网盘</h4>
+                    <p>提取码NHZY</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/main.js"></script>
+    <script>
+        // 动态生成背景浮动圆点
+        const dotWrap = document.querySelector('.bg-dots');
+        for(let i=0; i<60; i++){
+            const span = document.createElement('span');
+            span.style.left = Math.random()*100 + '%';
+            span.style.top = Math.random()*100 + '%';
+            span.style.animationDelay = Math.random()*8 + 's';
+            dotWrap.appendChild(span);
+        }
+    </script>
+</body>
+</html>

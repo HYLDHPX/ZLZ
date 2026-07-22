@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/HYLDHPX/NHGIMG/%E5%9C%86%E8%A7%922-%E5%9B%BE%E6%A0%871%20.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>赞助支持-NH导航</title>
+    <link rel="stylesheet" href="./css/main.css">
+    <style>
+        /* 图片容器专属样式，放页面内避免改外部css */
+        .image-replace-box {
+            margin: 20px auto;
+            text-align: center;
+            max-width: 600px; /* 限制图片最大宽度，不会过大 */
+            padding: 10px;
+        }
+        .image-replace-box img {
+            width: 100%;
+            height: auto; /* 高度自动，防止拉伸变形 */
+            max-height: 70vh; /* 限制图片最大高度，超出屏幕自动缩小 */
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .image-replace-box img:hover {
+            transform: scale(1.02); /* 轻微放大hover效果 */
+        }
+        /* 点击图片全屏预览弹窗 */
+        .img-preview-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+        .img-preview-modal img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+        }
+        .img-preview-modal.active {
+            display: flex;
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <!-- 背景浮动圆点 -->
+    <div class="bg-dots"></div>
+
+    <!-- 图片全屏预览弹窗 -->
+    <div class="img-preview-modal" id="imgModal">
+        <img id="modalImg" src="" alt="预览图">
+    </div>
+
+    <div class="nav-container">
+        <!-- 顶部工具栏（统一风格返回按钮） -->
+        <div class="top-toolbar">
+            <h1>个人导航</h1>
+            <button class="back-btn" onclick="location.href='index.html'">
+                 <span>←</span> 返回
+            </button>
+            <!-- 明暗切换开关 -->
+            <div id="modeToggle" class="mode-toggle">
+                <div id="toggleCircle" class="mode-toggle-circle">
+                    <span class="icon-sun">☀</span>
+                    <span class="icon-moon">☾</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 天气+时间区域 -->
+        <div class="header-row">
+            <div class="weather-box">
+                <div id="weatherIcon" class="weather-icon"></div>
+                <div class="weather-text">
+                    <div id="cityName" class="city">加载中...</div>
+                    <div id="temperature" class="temp">--℃</div>
+                    <div id="weatherDesc" class="weather-desc">加载天气</div>
+                </div>
+            </div>
+            <div class="time-box">
+                <div id="time" class="time-main">00:00:00</div>
+                <div id="dateInfo" class="date-info">2026年01月01日 星期四</div>
+            </div>
+        </div>
+
+        <!-- 站点运行时长 -->
+        <div class="runtime-box">
+            <span class="runtime-label">站点已稳定运行</span>
+            <span id="runTime" class="runtime-data">计算中...</span>
+        </div>
+
+        <!-- 打赏图片区域：等比例自适应，不拉伸 -->
+        <div class="image-replace-box">
+            <!-- 修复alt闭合语法错误 -->
+            <img 
+                id="donateImg"
+                src="https://cdn.jsdelivr.net/gh/HYLDHPX/NHGIMG/20260621030413249.png" 
+                alt="支付宝与微信赞助二维码"
+            >
+        </div>
+
+    </div>
+
+    <script src="./js/main.js"></script>
+    <script>
+        // 动态生成背景浮动圆点
+        const dotWrap = document.querySelector('.bg-dots');
+        for(let i=0; i<60; i++){
+            const span = document.createElement('span');
+            span.style.left = Math.random()*100 + '%';
+            span.style.top = Math.random()*100 + '%';
+            span.style.animationDelay = Math.random()*8 + 's';
+            dotWrap.appendChild(span);
+        }
+
+        // 图片点击全屏预览逻辑
+        const donateImg = document.getElementById('donateImg');
+        const imgModal = document.getElementById('imgModal');
+        const modalImg = document.getElementById('modalImg');
+        donateImg.onclick = () => {
+            modalImg.src = donateImg.src;
+            imgModal.classList.add('active');
+        }
+        // 点击遮罩关闭预览
+        imgModal.onclick = (e) => {
+            if(e.target === imgModal || e.target === modalImg) {
+                imgModal.classList.remove('active');
+            }
+        }
+        // ESC键关闭预览
+        document.addEventListener('keydown', e => {
+            if(e.key === 'Escape') imgModal.classList.remove('active');
+        })
+    </script>
+</body>
+</html>

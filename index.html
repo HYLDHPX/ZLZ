@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/HYLDHPX/NHGIMG/%E5%9C%86%E8%A7%922-%E5%9B%BE%E6%A0%871%20.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>导航主页-NH导航</title>
+    <link rel="stylesheet" href="./css/main.css">
+</head>
+<body class="dark-mode">
+    <!-- 背景浮动圆点 -->
+    <div class="bg-dots"></div>
+
+    <div class="nav-container">
+        <!-- 顶部工具栏（含美化返回按钮） -->
+        <div class="top-toolbar">
+            <h1>NH导航</h1>
+            <!-- 明暗切换开关 -->
+            <div id="modeToggle" class="mode-toggle">
+                <div id="toggleCircle" class="mode-toggle-circle">
+                    <span class="icon-sun">☀</span>
+                    <span class="icon-moon">☾</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 天气+时间区域 -->
+        <div class="header-row">
+            <div class="weather-box">
+                <div id="weatherIcon" class="weather-icon"></div>
+                <div class="weather-text">
+                    <div id="cityName" class="city">加载中...</div>
+                    <div id="temperature" class="temp">--℃</div>
+                    <div id="weatherDesc" class="weather-desc">加载天气</div>
+                </div>
+            </div>
+            <div class="time-box">
+                <div id="time" class="time-main">00:00:00</div>
+                <div id="dateInfo" class="date-info">2026年01月01日 星期四</div>
+            </div>
+        </div>
+
+        <!-- 站点运行时长 -->
+        <div class="runtime-box">
+            <span class="runtime-label">站点已稳定运行</span>
+            <span id="runTime" class="runtime-data">计算中...</span>
+        </div>
+
+        <!-- 网站卡片网格 -->
+        <div class="site-grid">
+            <div class="site-card" onclick="window.open('./zhiyvan.html','_blank')">
+                <div class="site-logo box">📦</div>
+                <div class="site-text">
+                    <h4>资源库</h4>
+                    <p>实用资源合集</p>
+                </div>
+            </div>
+            <div class="site-card" onclick="window.open('https://qr61.cn/oeA6gW/qFbqGW1','_blank')">
+                <div class="site-logo group">👥</div>
+                <div class="site-text">
+                    <h4>交流群</h4>
+                    <p>欢迎进来交流</p>
+                </div>
+            </div>
+            <div class="site-card" onclick="window.open('https://blog.zn2.top','_blank')">
+                <div class="site-logo blog">📝</div>
+                <div class="site-text">
+                    <h4>技术博客</h4>
+                    <p>教程与开发笔记</p>
+                </div>
+            </div>
+                        <div class="site-card" onclick="window.open('https://mail.zn2.top','_blank')">
+                <div class="site-logo blog">📫</div>
+                <div class="site-text">
+                    <h4>邮箱</h4>
+                    <p>使用cloudflare实现的mail</p>
+                </div>
+            </div>
+            <div class="site-card" onclick="window.open('./zhanzu.html','_blank')">
+                <div class="site-logo donate">💖</div>
+                <div class="site-text">
+                    <h4>赞助支持</h4>
+                    <p>请作者喝杯奶茶</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/main.js"></script>
+    <script>
+        // 动态生成背景浮动圆点
+        const dotWrap = document.querySelector('.bg-dots');
+        for(let i=0; i<60; i++){
+            const span = document.createElement('span');
+            span.style.left = Math.random()*100 + '%';
+            span.style.top = Math.random()*100 + '%';
+            span.style.animationDelay = Math.random()*8 + 's';
+            dotWrap.appendChild(span);
+        }
+    </script>
+</body>
+</html>
