@@ -10,7 +10,6 @@
 <body class="dark-mode">
     <!-- 背景浮动圆点 -->
     <div class="bg-dots"></div>
-
     <div class="nav-container">
         <!-- 顶部工具栏（含美化返回按钮） -->
         <div class="top-toolbar">
@@ -23,7 +22,6 @@
                 </div>
             </div>
         </div>
-
         <!-- 天气+时间区域 -->
         <div class="header-row">
             <div class="weather-box">
@@ -39,13 +37,11 @@
                 <div id="dateInfo" class="date-info">2026年01月01日 星期四</div>
             </div>
         </div>
-
         <!-- 站点运行时长 -->
         <div class="runtime-box">
             <span class="runtime-label">站点已稳定运行</span>
             <span id="runTime" class="runtime-data">计算中...</span>
         </div>
-
         <!-- 网站卡片网格 -->
         <div class="site-grid">
             <div class="site-card" onclick="window.open('./zhiyvan.html','_blank')">
@@ -62,14 +58,14 @@
                     <p>欢迎进来交流</p>
                 </div>
             </div>
-            <div class="site-card" onclick="window.open('https://blog.zn2.top','_blank')">
+            <div class="site-card" onclick="window.open('https://blog.nh24.top','_blank')">
                 <div class="site-logo blog">📝</div>
                 <div class="site-text">
                     <h4>技术博客</h4>
                     <p>教程与开发笔记</p>
                 </div>
             </div>
-                        <div class="site-card" onclick="window.open('https://mail.zn2.top','_blank')">
+            <div class="site-card" onclick="window.open('https://mail.zn2.top','_blank')">
                 <div class="site-logo blog">📫</div>
                 <div class="site-text">
                     <h4>邮箱</h4>
@@ -83,9 +79,16 @@
                     <p>请作者喝杯奶茶</p>
                 </div>
             </div>
+            <!-- 新增：夯拉排名生成器卡片 -->
+            <div class="site-card" onclick="window.open('./rank.html','_blank')">
+                <div class="site-logo play">📊</div>
+                <div class="site-text">
+                    <h4>夯拉排名生成器</h4>
+                    <p>TierList榜单图片制作工具</p>
+                </div>
+            </div>
         </div>
     </div>
-
     <script src="./js/main.js"></script>
     <script>
         // 动态生成背景浮动圆点

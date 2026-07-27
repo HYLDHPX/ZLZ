@@ -51,64 +51,52 @@ document.addEventListener("DOMContentLoaded", function(){
     setInterval(calcBuildRunTime, 1000);
 
     // 3. IP定位 + open-meteo免费天气（国内稳定IP接口）
-    async function getIpWeather() {
-        let lat = 22.03;
-        let lon = 111.96;
-        let cityName = "广东阳江";
-        // 国内IP定位接口，替代不稳定ipapi.co
-        try {
-            const ipRes = await fetch("https://api.ip.sb/jsonip", {signal: AbortSignal.timeout(3000)});
-            const ipData = await ipRes.json();
-            const region = ipData.region || "";
-            const city = ipData.city || "阳江";
-            cityName = `${region} ${city}`;
-            lat = Number(ipData.latitude) || lat;
-            lon = Number(ipData.longitude) || lon;
-        } catch (e) {
-            console.log("IP定位失败，使用默认阳江坐标");
-        }
+// 3. 锁定广东阳春天气，禁用IP定位
+async function getIpWeather() {
+    // 固定阳春坐标，不再走IP定位
+    const lat = 22.1704;
+    const lon = 111.7916;
+    const cityName = "广东阳春";
 
-        try {
-            const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=auto`, {signal: AbortSignal.timeout(4000)});
-            const weatherJson = await weatherRes.json();
-            const now = weatherJson.current;
-            const temp = now.temperature_2m;
-            const code = now.weather_code;
-            const hour = new Date().getHours();
-            let iconKey = "cloudy";
-
-            // 天气代码匹配图标
-            if(code >= 0 && code <=3) iconKey = "sunny";
-            if(code >=45 && code <=48) iconKey = "overcast";
-            if(code >=51 && code <=67) iconKey = "rainy";
-            if(code >=71 && code <=77) iconKey = "snow";
-            if(code >=80 && code <=99) iconKey = "thunder";
-            // 18点后、6点前强制夜间月亮图标
-            if(hour <6 || hour >=18) iconKey = "night";
-
-            // 完善中文天气描述库
-            const descMap = {
-                0:"晴朗",1:"大部晴朗",2:"多云",3:"阴天",
-                45:"雾",48:"霜雾",
-                51:"小雨",53:"小雨",55:"大雨",
-                61:"小雨",63:"中雨",65:"大雨",
-                71:"小雪",73:"中雪",75:"大雪",
-                95:"雷阵雨",96:"雷暴伴冰雹",99:"强雷暴冰雹"
-            };
-            const desc = descMap[code] || "多云";
-
-            document.getElementById("cityName").textContent = cityName;
-            document.getElementById("weatherIcon").innerHTML = weatherIcons[iconKey];
-            document.getElementById("temperature").textContent = `${temp}℃`;
-            document.getElementById("weatherDesc").textContent = desc;
-        } catch (err) {
-            console.error("天气接口获取失败：", err);
-            document.getElementById("cityName").textContent = "广东阳江";
-            document.getElementById("temperature").textContent = "--℃";
-            document.getElementById("weatherDesc").textContent = "天气加载失败";
-            document.getElementById("weatherIcon").innerHTML = weatherIcons.night;
-        }
+    try {
+        const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=auto`, {signal: AbortSignal.timeout(4000)});
+        const weatherJson = await weatherRes.json();
+        const now = weatherJson.current;
+        const temp = now.temperature_2m;
+        const code = now.weather_code;
+        const hour = new Date().getHours();
+        let iconKey = "cloudy";
+        // 天气代码匹配图标
+        if(code >= 0 && code <=3) iconKey = "sunny";
+        if(code >=45 && code <=48) iconKey = "overcast";
+        if(code >=51 && code <=67) iconKey = "rainy";
+        if(code >=71 && code <=77) iconKey = "snow";
+        if(code >=80 && code <=99) iconKey = "thunder";
+        // 18点后、6点前强制夜间月亮图标
+        if(hour <6 || hour >=18) iconKey = "night";
+        // 完善中文天气描述库
+        const descMap = {
+            0:"晴朗",1:"大部晴朗",2:"多云",3:"阴天",
+            45:"雾",48:"霜雾",
+            51:"小雨",53:"小雨",55:"大雨",
+            61:"小雨",63:"中雨",65:"大雨",
+            71:"小雪",73:"中雪",75:"大雪",
+            95:"雷阵雨",96:"雷暴伴冰雹",99:"强雷暴冰雹"
+        };
+        const desc = descMap[code] || "多云";
+        document.getElementById("cityName").textContent = cityName;
+        document.getElementById("weatherIcon").innerHTML = weatherIcons[iconKey];
+        document.getElementById("temperature").textContent = `${temp}℃`;
+        document.getElementById("weatherDesc").textContent = desc;
+    } catch (err) {
+        console.error("天气接口获取失败：", err);
+        document.getElementById("cityName").textContent = "广东阳春";
+        document.getElementById("temperature").textContent = "--℃";
+        document.getElementById("weatherDesc").textContent = "天气加载失败";
+        document.getElementById("weatherIcon").innerHTML = weatherIcons.night;
     }
+}
+
     getIpWeather();
     setInterval(getIpWeather, 600000); // 刷新一次天气
 

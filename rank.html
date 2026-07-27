@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/HYLDHPX/NHGIMG/%E5%9C%86%E8%A7%922-%E5%9B%BE%E6%A0%871%20.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>夯拉排名生成器-NH导航</title>
+    <link rel="stylesheet" href="./css/main.css">
+    <style>
+        .rank-wrap {
+            margin-top: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .rank-row {
+            display: flex;
+            border-radius: 14px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .rank-row {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.light-mode .rank-row {
+            border: 1px solid #e5e7eb;
+        }
+
+        .rank-label {
+            width: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .rank-item-box {
+            flex: 1;
+            min-height: 70px;
+            padding: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .rank-item {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+            user-select: none;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .rank-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* 禁止图片单独拖拽 */
+            pointer-events: none;
+        }
+
+        /* 新增透明遮罩层，接管所有拖拽点击 */
+        .item-mask {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            background: transparent;
+        }
+
+        .rank-item:active {
+            cursor: grabbing;
+            transform: scale(0.95);
+        }
+
+        .rank-item .remove {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.65);
+            color: #fff;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 3;
+        }
+
+        .rank-item:hover .remove {
+            opacity: 1;
+        }
+
+        .source-area {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 14px;
+            min-height: 90px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            user-select: none;
+        }
+
+        body.dark-mode .source-area {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.light-mode .source-area {
+            background: #f7f9fc;
+            border: 1px solid #e5e7eb;
+        }
+
+        .btn-group {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .tool-btn {
+            padding: 9px 18px;
+            border-radius: 14px;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .tool-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #e5e7eb;
+        }
+
+        body.light-mode .tool-btn {
+            background: #f7f9fc;
+            border: 1px solid #e5e7eb;
+            color: #1f2937;
+        }
+
+        .tool-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .rank-hang {
+            background: #ff4136;
+            color: #fff;
+        }
+
+        .rank-top {
+            background: #ff851b;
+            color: #fff;
+        }
+
+        .rank-elite {
+            background: #ffdc00;
+            color: #111;
+        }
+
+        .rank-npc {
+            background: #ffff9d;
+            color: #111;
+        }
+
+        .rank-la {
+            background: #ddd;
+            color: #111;
+        }
+
+        #imgUpload {
+            display: none;
+        }
+
+        .quality-tip {
+            font-size: 12px;
+            opacity: 0.75;
+            margin-top: 8px;
+        }
+
+        @media screen and (max-width: 480px) {
+            .rank-label {
+                width: 70px;
+                font-size: 14px;
+            }
+
+            .rank-item {
+                width: 42px;
+                height: 42px;
+            }
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <div class="bg-dots"></div>
+    <div class="nav-container">
+        <div class="top-toolbar">
+            <h1>夯拉排名生成器</h1>
+            <button class="back-btn" onclick="location.href='index.html'">
+                <span>←</span> 返回
+            </button>
+            <div id="modeToggle" class="mode-toggle">
+                <div id="toggleCircle" class="mode-toggle-circle">
+                    <span class="icon-sun">☀</span>
+                    <span class="icon-moon">☾</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-row">
+            <div class="weather-box">
+                <div id="weatherIcon" class="weather-icon"></div>
+                <div class="weather-text">
+                    <div id="cityName" class="city">加载中...</div>
+                    <div id="temperature" class="temp">--℃</div>
+                    <div id="weatherDesc" class="weather-desc">加载天气</div>
+                </div>
+            </div>
+            <div class="time-box">
+                <div id="time" class="time-main">00:00:00</div>
+                <div id="dateInfo" class="date-info">2026年01月01日 星期四</div>
+            </div>
+        </div>
+
+        <div class="runtime-box">
+            <span class="runtime-label">站点已稳定运行</span>
+            <span id="runTime" class="runtime-data">计算中...</span>
+        </div>
+
+        <div class="rank-wrap" id="rankWrap">
+            <div class="rank-row">
+                <div class="rank-label rank-hang">夯</div>
+                <div class="rank-item-box" data-tier="hang"></div>
+            </div>
+            <div class="rank-row">
+                <div class="rank-label rank-top">顶尖</div>
+                <div class="rank-item-box" data-tier="top"></div>
+            </div>
+            <div class="rank-row">
+                <div class="rank-label rank-elite">人上人</div>
+                <div class="rank-item-box" data-tier="elite"></div>
+            </div>
+            <div class="rank-row">
+                <div class="rank-label rank-npc">NPC</div>
+                <div class="rank-item-box" data-tier="npc"></div>
+            </div>
+            <div class="rank-row">
+                <div class="rank-label rank-la">拉完了</div>
+                <div class="rank-item-box" data-tier="la"></div>
+            </div>
+        </div>
+
+        <div class="source-area" id="sourceArea">
+            <div style="width:100%;text-align:center;opacity:0.65;font-size:13px;">
+              暂无素材，请点击下方按钮上传图片
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <input type="file" id="imgUpload" accept="image/*" multiple>
+            <button class="tool-btn" id="uploadBtn">上传图片</button>
+            <button class="tool-btn" id="exportBtn">导出榜单图片</button>
+            <button class="tool-btn" id="clearBtn">清空全部</button>
+        </div>
+
+        <p class="quality-tip">
+            上传的图片会自动压缩为缩略图，导出高清榜单不受影响。
+        </p>
+    </div>
+
+    <script src="./js/main.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script>
+        const dotWrap = document.querySelector('.bg-dots');
+        for (let i = 0; i < 60; i++) {
+            const span = document.createElement('span');
+            span.style.left = Math.random() * 100 + '%';
+            span.style.top = Math.random() * 100 + '%';
+            span.style.animationDelay = Math.random() * 8 + 's';
+            dotWrap.appendChild(span);
+        }
+
+        const uploadBtn = document.getElementById('uploadBtn');
+        const imgUpload = document.getElementById('imgUpload');
+        const sourceArea = document.getElementById('sourceArea');
+
+        uploadBtn.onclick = () => imgUpload.click();
+
+        imgUpload.onchange = (e) => {
+            const files = e.target.files;
+            for (let file of files) {
+                if (!file.type.startsWith('image/')) continue;
+                const reader = new FileReader();
+                reader.onload = function (ev) {
+                    compressImage(ev.target.result, 50, 50, 0.92, (compressedSrc) => {
+                        addImageItem(compressedSrc);
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+            imgUpload.value = '';
+        };
+
+        function compressImage(src, maxWidth, maxHeight, quality, callback) {
+            const img = new Image();
+            img.src = src;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+                if (width > height) {
+                    if (width > maxWidth) {
+                        height = (height * maxWidth) / width;
+                        width = maxWidth;
+                    }
+                } else {
+                    if (height > maxHeight) {
+                        width = (width * maxHeight) / height;
+                        height = maxHeight;
+                    }
+                }
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                callback(canvas.toDataURL('image/png', quality));
+            };
+        }
+
+        function addImageItem(src) {
+            const item = document.createElement('div');
+            item.className = 'rank-item';
+            item.draggable = true;
+
+            const img = document.createElement('img');
+            img.src = src;
+
+            // 透明遮罩层，阻断图片原生拖拽
+            const mask = document.createElement('div');
+            mask.className = 'item-mask';
+
+            const remove = document.createElement('div');
+            remove.className = 'remove';
+            remove.textContent = '×';
+            remove.onclick = (e) => {
+                e.stopPropagation();
+                item.remove();
+            };
+
+            item.appendChild(img);
+            item.appendChild(mask);
+            item.appendChild(remove);
+            sourceArea.appendChild(item);
+        }
+
+        // 拖拽逻辑
+        let dragEl = null;
+        document.addEventListener('dragstart', (e) => {
+            if (e.target.closest('.rank-item')) {
+                dragEl = e.target.closest('.rank-item');
+                dragEl.style.opacity = '0.4';
+            }
+        });
+
+        document.addEventListener('dragend', (e) => {
+            const targetItem = e.target.closest('.rank-item');
+            if (targetItem) {
+                targetItem.style.opacity = '1';
+                dragEl = null;
+            }
+        });
+
+        document.querySelectorAll('.rank-item-box, #sourceArea').forEach((box) => {
+            box.addEventListener('dragover', e => e.preventDefault());
+            box.addEventListener('drop', (e) => {
+                e.preventDefault();
+                if (dragEl) box.appendChild(dragEl);
+            });
+        });
+
+        document.getElementById('clearBtn').onclick = () => {
+            document.querySelectorAll('.rank-item-box').forEach((box) => {
+                while (box.firstChild) sourceArea.appendChild(box.firstChild);
+            });
+        };
+
+        document.getElementById('exportBtn').onclick = async () => {
+            const target = document.getElementById('rankWrap');
+            const canvas = await html2canvas(target, {
+                backgroundColor: null,
+                scale: 2
+            });
+            const link = document.createElement('a');
+            link.download = '夯拉排名榜单.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        };
+    </script>
+</body>
+</html>
